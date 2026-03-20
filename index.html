@@ -3,31 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Scale of Big</title>
+    <title>The Busy Beaver Project</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="site.css">
 </head>
 <body>
-    <canvas id="bg-canvas"></canvas>
-    <div id="progress-bar"></div>
-    <div id="phase-label"></div>
+    <header>
+        <h1>The Busy Beaver Project</h1>
+        <p class="subtitle">Exploring the fastest-growing function in mathematics</p>
+    </header>
 
-    <section class="hero">
-        <h1>The Scale of Big</h1>
-        <p class="subtitle">Scroll down. Things get weird.</p>
-        <div class="scroll-hint">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M12 5v14M5 12l7 7 7-7"/>
-            </svg>
-        </div>
-    </section>
+    <nav>
+        <a href="#what">What is BB?</a>
+        <a href="#simulator">Simulator</a>
+        <a href="#champions">Champions</a>
+        <a href="#crash">The 5/3 Ratio</a>
+        <a href="#findings">Findings</a>
+    </nav>
 
-    <div id="journey"></div>
+    <main>
+        <!-- ══ What is Busy Beaver? ══ -->
+        <section id="what">
+            <h2>What is the Busy Beaver function?</h2>
+            <p>A Turing machine is the simplest possible computer: a tape of 0s and 1s, a head that reads and writes one cell at a time, and a small set of rules. <strong>BB(n)</strong> asks: of all n-state machines that eventually halt, which one writes the most 1s?</p>
+            <p>The answer grows so fast that no algorithm can ever compute it. BB(1) = 1. BB(2) = 4. BB(3) = 6. BB(4) = 13. Then BB(5) = <strong>47,176,870 steps</strong>, producing 4,098 ones. BB(6) is unknown and may be unknowable within standard mathematics.</p>
 
-    <script src="entries.js"></script>
-    <script src="visualizations.js"></script>
-    <script src="main.js"></script>
+            <div class="machine-diagram">
+                <div class="tape" id="demo-tape"></div>
+                <div class="head-pointer">&#9650;</div>
+                <div class="state-display">State: <span id="demo-state">A</span></div>
+                <div class="controls">
+                    <button id="demo-step">Step</button>
+                    <button id="demo-run">Run</button>
+                    <button id="demo-reset">Reset</button>
+                    <select id="demo-select">
+                        <option value="1">BB(1) - 1 one, 1 step</option>
+                        <option value="2" selected>BB(2) - 4 ones, 6 steps</option>
+                        <option value="3">BB(3) - 6 ones, 14 steps</option>
+                        <option value="4">BB(4) - 13 ones, 107 steps</option>
+                    </select>
+                </div>
+                <div class="machine-info">
+                    Step: <span id="demo-steps">0</span> |
+                    Ones: <span id="demo-ones">0</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══ Champions ══ -->
+        <section id="champions">
+            <h2>The Champions</h2>
+            <table class="champions-table">
+                <thead>
+                    <tr><th>BB(n)</th><th>Ones</th><th>Steps</th><th>Strategy</th><th>Year proved</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>BB(1)</td><td>1</td><td>1</td><td>Trivial</td><td>1962</td></tr>
+                    <tr><td>BB(2)</td><td>4</td><td>6</td><td>Ping-pong bounce</td><td>1965</td></tr>
+                    <tr><td>BB(3)</td><td>6</td><td>14</td><td>Sweep-and-extend</td><td>1965</td></tr>
+                    <tr><td>BB(4)</td><td>13</td><td>107</td><td>Nested oscillation</td><td>1983</td></tr>
+                    <tr class="highlight"><td>BB(5)</td><td>4,098</td><td>47,176,870</td><td>Crash-rebuild counter</td><td>2024</td></tr>
+                    <tr class="unknown"><td>BB(6)</td><td>> 10&uarr;&uarr;&uarr;5</td><td>?</td><td>Unknown</td><td>?</td></tr>
+                </tbody>
+            </table>
+            <p>The jump from BB(4) to BB(5) is staggering: 13 ones to 4,098. The jump to BB(6) is beyond comprehension &mdash; it exceeds numbers expressible with power towers.</p>
+        </section>
+
+        <!-- ══ BB(5) Crash Dynamics ══ -->
+        <section id="crash">
+            <h2>The 5/3 Ratio: How BB(5) Actually Works</h2>
+            <p>We discovered that the BB(5) champion doesn't build ones monotonically. It follows a <strong>crash-rebuild sawtooth pattern</strong> governed by a single ratio: <strong>5/3</strong>.</p>
+
+            <div class="chart-container">
+                <canvas id="crash-chart" width="800" height="400"></canvas>
+            </div>
+
+            <div class="ratio-cards">
+                <div class="card">
+                    <div class="card-value">5/3</div>
+                    <div class="card-label">Peak growth ratio</div>
+                    <div class="card-detail">Each peak is 5/3x the previous</div>
+                </div>
+                <div class="card">
+                    <div class="card-value">1/3</div>
+                    <div class="card-label">Survival fraction</div>
+                    <div class="card-detail">Each crash destroys ~2/3 of ones</div>
+                </div>
+                <div class="card">
+                    <div class="card-value">25/9</div>
+                    <div class="card-label">Interval ratio</div>
+                    <div class="card-detail">(5/3)&sup2; &mdash; crashes spaced geometrically</div>
+                </div>
+            </div>
+
+            <h3>The Mechanism</h3>
+            <p>The machine spends 99.6% of its time in just two transitions &mdash; sweeping right (state B) and sweeping left (state D). States A, C, and E fire less than 0.4% of the time, but they control everything.</p>
+
+            <div class="mechanism">
+                <div class="phase">
+                    <h4>Normal: Building</h4>
+                    <p>Sweepers bounce back and forth, extending the ones region by +2 at each boundary. Zero erasure.</p>
+                </div>
+                <div class="phase crash-phase">
+                    <h4>Crash: ACE Erasure Chain</h4>
+                    <p>At a macro-boundary, states A, C, E form an erasure cascade: <code>=A -C -E =A -C -E ...</code> Each cycle erases 2 ones. The chain propagates until A hits a 0.</p>
+                </div>
+                <div class="phase">
+                    <h4>Recovery: Pure Rebuild</h4>
+                    <p>After the crash, the machine rebuilds with literally 0% erasure. The new peak is 5/3x higher.</p>
+                </div>
+            </div>
+
+            <h3>The Tape Pattern</h3>
+            <p>The erasure chain leaves a signature: <code class="tape-pattern">100100100...</code> repeated inside the ones region. This pattern acts as a <strong>counter register</strong> &mdash; more <code>100</code> blocks means longer until the next crash. Each crash adds more blocks, which is why the intervals grow geometrically.</p>
+        </section>
+
+        <!-- ══ Key Findings ══ -->
+        <section id="findings">
+            <h2>Research Findings</h2>
+
+            <div class="finding">
+                <h3>Motif Taxonomy</h3>
+                <p>All BB champions share three structural motifs: <strong>sweepers</strong> (self-loops that march through 1s), <strong>gap-makers</strong> (transitions that write 0, creating internal structure), and <strong>reluctant halters</strong> (halt only triggers on a hard-to-reach condition).</p>
+            </div>
+
+            <div class="finding">
+                <h3>Amplification Predicts Performance</h3>
+                <p>We enumerated all 16.7 million 3-state machines. Only 2.5% show repeating amplification cycles, but they produce <strong>1.7x more ones</strong> on average. 100% of machines reaching the maximum score have amplification. Deeper nesting = better: depth-2 machines score 3.1x higher than depth-0.</p>
+            </div>
+
+            <div class="finding">
+                <h3>Oscillator vs Counter</h3>
+                <p>Not all crashing machines are productive. <strong>Oscillators</strong> crash at constant intervals and never escape their cycle. <strong>Counters</strong> (like BB(5)) crash at geometrically growing intervals, doing exponentially more work each time. This distinction is a novel classification heuristic.</p>
+            </div>
+
+            <div class="finding">
+                <h3>BB(6) Holdout Analysis</h3>
+                <p>We applied our framework to all 1,214 undecided BB(6) machines from <a href="https://bbchallenge.org">bbchallenge.org</a>. Found 272 translated cyclers (definitively non-halting), and 0 machines with BB(5)-like counter dynamics among 500M-step runs. The counter mechanism appears to be extraordinarily rare.</p>
+            </div>
+
+            <div class="finding">
+                <h3>5/3 is Novel</h3>
+                <p>A literature search confirms that no prior analysis of BB(5)'s runtime dynamics has been published. The crash pattern, the 5/3 ratio, the boundary event mechanism, and the <code>100100100</code> tape pattern are all new findings.</p>
+            </div>
+        </section>
+
+        <section id="code">
+            <h2>Code & Data</h2>
+            <p>All analysis code is open source: <a href="https://github.com/arcoretx/big-numbers">github.com/arcoretx/big-numbers</a></p>
+            <p>Toolkit includes: TM simulator, interactive playground, brute-force enumerator, amplification analyser, nesting depth detector, crash dynamics profiler, and BB(6) holdout classifier.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>A research project by Anthony Rose, with Claude.</p>
+    </footer>
+
+    <script src="site.js"></script>
 </body>
 </html>

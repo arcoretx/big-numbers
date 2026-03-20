@@ -1,0 +1,302 @@
+/* ── Base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --border: #1e1e2e;
+    --text: #e0e0e8;
+    --text-dim: #8888a0;
+    --accent: #6c8cff;
+    --accent2: #ff6c8c;
+    --green: #4cdf7c;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Inter', sans-serif;
+    --serif: 'Playfair Display', serif;
+}
+
+body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 16px;
+}
+
+/* ── Header ── */
+header {
+    text-align: center;
+    padding: 80px 20px 40px;
+    border-bottom: 1px solid var(--border);
+}
+
+header h1 {
+    font-family: var(--serif);
+    font-size: 3em;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+header .subtitle {
+    color: var(--text-dim);
+    font-size: 1.2em;
+    font-weight: 300;
+}
+
+/* ── Nav ── */
+nav {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 100;
+}
+
+nav a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+nav a:hover { color: var(--accent); }
+
+/* ── Main ── */
+main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+section {
+    padding: 60px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+h2 {
+    font-family: var(--serif);
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+h3 {
+    font-size: 1.3em;
+    margin: 30px 0 12px;
+    color: var(--accent);
+}
+
+h4 { margin-bottom: 8px; }
+
+p { margin-bottom: 16px; }
+
+a { color: var(--accent); }
+
+code {
+    font-family: var(--mono);
+    background: var(--surface);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+/* ── Machine Diagram ── */
+.machine-diagram {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 30px;
+    margin: 30px 0;
+    text-align: center;
+}
+
+.tape {
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+    margin-bottom: 4px;
+    min-height: 40px;
+    align-items: center;
+}
+
+.tape .cell {
+    width: 32px;
+    height: 36px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 1.1em;
+    transition: all 0.15s;
+}
+
+.tape .cell.one { background: var(--accent); color: #fff; border-color: var(--accent); }
+.tape .cell.head { border-color: var(--green); border-width: 2px; }
+
+.head-pointer {
+    color: var(--green);
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.state-display {
+    font-family: var(--mono);
+    font-size: 1.1em;
+    margin-bottom: 16px;
+    color: var(--green);
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.controls button, .controls select {
+    font-family: var(--mono);
+    font-size: 0.85em;
+    padding: 8px 16px;
+    background: var(--border);
+    color: var(--text);
+    border: 1px solid #333;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.controls button:hover { background: var(--accent); color: #fff; }
+.controls select { background: var(--surface); }
+
+.machine-info {
+    font-family: var(--mono);
+    font-size: 0.9em;
+    color: var(--text-dim);
+}
+
+/* ── Champions Table ── */
+.champions-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-family: var(--mono);
+    font-size: 0.9em;
+}
+
+.champions-table th, .champions-table td {
+    padding: 10px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+.champions-table th {
+    color: var(--text-dim);
+    font-weight: 500;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.champions-table .highlight { color: var(--accent); font-weight: 600; }
+.champions-table .unknown { color: var(--text-dim); font-style: italic; }
+
+/* ── Chart ── */
+.chart-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 30px 0;
+}
+
+.chart-container canvas { width: 100%; height: auto; }
+
+/* ── Ratio Cards ── */
+.ratio-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 30px 0;
+}
+
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    text-align: center;
+}
+
+.card-value {
+    font-family: var(--serif);
+    font-size: 2.5em;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 4px;
+}
+
+.card-label {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.card-detail {
+    font-size: 0.85em;
+    color: var(--text-dim);
+}
+
+/* ── Mechanism ── */
+.mechanism {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 20px 0;
+}
+
+.phase {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.phase h4 { color: var(--green); }
+.crash-phase { border-color: var(--accent2); }
+.crash-phase h4 { color: var(--accent2); }
+
+.tape-pattern {
+    font-size: 1.1em;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+}
+
+/* ── Findings ── */
+.finding {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    margin: 16px 0;
+}
+
+.finding h3 { margin-top: 0; }
+
+/* ── Footer ── */
+footer {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-dim);
+    font-size: 0.9em;
+}
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+    .ratio-cards, .mechanism { grid-template-columns: 1fr; }
+    nav { flex-wrap: wrap; gap: 12px; }
+    header h1 { font-size: 2em; }
+}
