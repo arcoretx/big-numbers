@@ -59,7 +59,7 @@ The machine has 5 states. Two of them (B and D) are **sweepers** — they march 
 
 ## Why this matters
 
-1. **Nobody has published this before.** The BB community's focus was on *proving* BB(5) = 47,176,870. The question of *how* the champion behaves during its 47 million steps wasn't asked.
+1. **The phenomenology is new.** The BB community has the Collatz-like function f(n) = 3n + 6 - 4⌊n/3⌋ that governs the champion (the 5/3 ratio is implicit in f(3x) = 5x + 6). But the sawtooth crash pattern, the invariant tape structure, and the explicit constants (5/3, 1/3, 25/9) as observable dynamics haven't been written up.
 
 2. **The invariant structure is surprising.** A machine that runs for 47 million steps maintaining exactly 5 `100` blocks at every peak — that's extraordinary hidden order.
 

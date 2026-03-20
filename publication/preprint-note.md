@@ -12,9 +12,9 @@ We present the first detailed empirical analysis of the runtime dynamics of the 
 
 The Busy Beaver function BB(n) gives the maximum number of steps a halting n-state Turing machine can execute starting from a blank tape. The value BB(5) = 47,176,870 was determined in 2024 by the bbchallenge.org collaborative project [1], completing a 60-year quest initiated by Rado [2]. The proof required classifying every 5-state machine as halting or non-halting.
 
-While the proof establishes *that* the champion halts after 47,176,870 steps, no detailed analysis of *how* the champion's computation evolves has been published. Marxen and Buntrock [3], who discovered the champion in 1989, explicitly prioritised computational methodology over phenomenological description. The bbchallenge wiki [4] provides shift rules and a recursive formulation but does not analyse the machine's temporal dynamics.
+While the proof establishes *that* the champion halts after 47,176,870 steps, and the bbchallenge wiki [4] provides shift rules, a Collatz-like recurrence function f(n) = 3n + 6 - 4⌊n/3⌋, and the full trajectory of the parameter n, no phenomenological analysis of the champion's runtime dynamics — the evolution of the ones count, tape configuration, and crash-rebuild pattern — has been published. Marxen and Buntrock [3] explicitly prioritised computational methodology over phenomenological description.
 
-We fill this gap by tracking the champion's ones count, tape configuration, and state distribution throughout its full execution, revealing a remarkably clean structure governed by the ratio 5/3.
+We fill this gap by tracking the champion's ones count and tape configuration throughout its full execution. We discover an invariant tape structure at each crash boundary, derive explicit convergent constants (5/3, 1/3, 25/9) governing the dynamics, and show these constants arise directly from the known Collatz-like function's coefficients: f(3x) = 5x + 6 yields the asymptotic ratio 5/3.
 
 ## 2. The Invariant Tape Structure
 
