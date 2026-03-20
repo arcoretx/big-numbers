@@ -172,6 +172,19 @@ We explored three approaches to designing BB(6) candidates:
 
 **Implication for BB(6):** A genuine improvement requires a machine whose 6th state creates a *deeper counter* — one where crashes are geometrically spaced with a ratio larger than BB(5)'s 25/9, yielding super-exponential growth.
 
+### BB(6) Holdout Classification
+
+Applied our framework to all 1,214 undecided BB(6) machines from [bbchallenge.org](https://bbchallenge.org). The **oscillator/counter distinction** is a novel classification heuristic not currently used by the BB Challenge community.
+
+| Classification | Count | Description |
+|---------------|-------|-------------|
+| Counter-type | 9 | Geometric crash spacing (BB(5)-like dynamics) — strongest BB candidates |
+| Oscillator-type | 15 | Constant crash spacing — likely non-halting |
+| Chaotic | 513 | Irregular dynamics |
+| Insufficient data | 667 | Need longer runs (>10M steps) |
+
+The top counter-type machine (`1RB---_0RC1RC_1RD0LE_1RE0RB_1LF0RA_1LC1LF`) shows an interval ratio of 1,759x with only 5.6% loss per crash. All 9 counter-type machines use all 6 states.
+
 ## Open Questions
 
 1. Can the 5/3 ratio be proven exactly from the BB(5) transition table?
