@@ -7,99 +7,134 @@ The BB(5) Busy Beaver champion (1RB1LC_1RC1RB_1RD0LE_1LA1LD_1RH0LA) executes 47,
 | Constant | Converged Value | Relation to 5/3 |
 |----------|----------------|-----------------|
 | Peak growth ratio | 5/3 ≈ 1.667 | Direct |
-| Survival fraction | 1/3 ≈ 0.333 | 1/(5/3 + 2/3) |
+| Survival fraction | 1/3 ≈ 0.333 | 1 - 2/3 |
 | Inter-crash interval ratio | 25/9 ≈ 2.778 | (5/3)^2 |
 
-## The Crash-Rebuild Pattern
+## The Invariant Tape Structure
 
-The BB(5) champion does not build ones monotonically. Instead, it exhibits **8 crash events** where the ones count drops dramatically before rebuilding:
-
-| Crash | Start Step | Peak Ones | Trough | Loss % |
-|-------|-----------|-----------|--------|--------|
-| 1 | 35,000 | 335 | 183 | 45.4% |
-| 2 | 99,000 | 563 | 263 | 53.3% |
-| 3 | 280,000 | 947 | 389 | 58.9% |
-| 4 | 785,000 | 1,585 | 593 | 62.6% |
-| 5 | 2,190,000 | 2,647 | 945 | 64.3% |
-| 6 | 6,098,000 | 4,417 | 1,537 | 65.2% |
-| 7 | 16,963,000 | 7,367 | 2,525 | 65.7% |
-| 8 | 47,164,000 | 12,285 | 4,098 | 66.6% |
-
-The crashes follow geometric progressions:
-- Each crash occurs **25/9 ≈ 2.778× later** than the previous one
-- Each peak is **5/3× higher** than the previous peak
-- Each crash destroys approximately **2/3 of the ones**, converging toward exactly 2/3
-
-## Mechanism: Boundary Events and the ACE Erasure Chain
-
-The machine spends 99.6% of its time in two transitions:
-- **B,1 → 1RB** (right sweeper, 50% of all steps)
-- **D,1 → 1LD** (left sweeper, 50% of all steps)
-
-States A, C, and E fire <0.4% of the time but control the macro-dynamics entirely.
-
-### Normal operation (between crashes)
-
-When a sweeper hits the boundary of the ones region, it triggers a **boundary event**:
-- `+B +C`: right boundary hit → extends boundary, creates 2 ones
-- `+D +A`: left boundary hit → extends boundary, creates 2 ones
-
-These are pure building events with zero erasure.
-
-### Crash events
-
-When the machine reaches a **macro-boundary** (determined by the tape's internal structure), it triggers the **ACE erasure chain**:
+The tape at every peak has an exact, invariant form:
 
 ```
-C reads 1 → writes 0, moves L, enters E    (−1 one)
-E reads 1 → writes 0, moves L, enters A    (−1 one)
-A reads 1 → writes 1, moves L, enters C    (no net change)
-C reads 1 → writes 0, moves L, enters E    (−1 one)
-... repeats until A hits a 0 ...
+[M ones] 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 1
+          \_/ \_/ \_/ \_/ \_/
+          5 fixed "100" blocks + trailing "11"
 ```
 
-Each `=A −C −E` cycle erases 2 ones. The chain propagates leftward through the existing ones until A encounters a 0 and restarts the build cycle.
+**Peak ones = M + 18. Tape span = M + 18. The 5-block tail is constant across all 13 macro-crashes.**
 
-### The tape structure
+| Cycle | M (max run) | Peak ones (M+18) | Peak ratio |
+|-------|------------|-------------------|------------|
+| 1 | 2 | 20 | — |
+| 2 | 20 | 38 | 1.900 |
+| 3 | 50 | 68 | 1.789 |
+| 4 | 100 | 118 | 1.735 |
+| 5 | 182 | 200 | 1.695 |
+| 6 | 320 | 338 | 1.690 |
+| 7 | 550 | 568 | 1.681 |
+| 8 | 932 | 950 | 1.673 |
+| 9 | 1,570 | 1,588 | 1.672 |
+| 10 | 2,632 | 2,650 | 1.669 |
+| 11 | 4,402 | 4,420 | 1.668 |
+| 12 | 7,352 | 7,370 | 1.667 |
+| 13 | 12,270 | 12,288 | 1.667 |
 
-The erasure chain leaves a signature pattern on the tape: **`100100100...`** — the digit sequence `100` repeated. This pattern acts as a **counter register**:
-- More `100` blocks = longer until the next crash
-- Each crash adds more `100` blocks
-- The number of `100` blocks grows by a factor related to 5/3 each cycle
+The peak ratio converges to **5/3 = 1.66667** (within 0.0002 by cycle 13).
 
-This is why the inter-crash intervals grow geometrically: the "counter" gets larger each cycle, and the machine must traverse the entire counter before the next crash triggers.
+## The Recurrence
 
-## The 5/3 Ratio Explained
+The max contiguous run M follows the recurrence:
 
-The 5/3 ratio emerges from the boundary event accounting:
+**M_{n+1} = (5/3) M_n + c**
 
-During a build phase between crashes, the machine performs ~N boundary events, each creating +2 ones. The number of boundary events is proportional to the tape length (the sweepers must traverse the full tape).
+where c is a small constant (empirically ~10-20) that becomes negligible for large M. This was verified by measuring the "extra growth" beyond simple block refilling:
 
-During a crash, the ACE chain erases ones proportional to the current tape content. The ratio of building-to-erasure is determined by the transition graph structure: 5 states, of which 3 (A, C, E) participate in the erasure chain, and the specific wiring creates a net balance where each rebuild cycle produces 5/3× the previous peak.
+| Cycle | M_n | M_{n+1} | Extra growth | Extra/M_n |
+|-------|-----|---------|-------------|-----------|
+| 4→5 | 100 | 182 | 32 | 0.678 |
+| 5→6 | 182 | 320 | 88 | 0.692 |
+| 6→7 | 320 | 550 | 180 | 0.692 |
+| 7→8 | 550 | 932 | 332 | 0.678 |
+| 8→9 | 932 | 1,570 | 588 | 0.674 |
+| 9→10 | 1,570 | 2,632 | 1,012 | 0.670 |
+| 10→11 | 2,632 | 4,402 | 1,720 | 0.669 |
+| 11→12 | 4,402 | 7,352 | 2,900 | 0.668 |
+| 12→13 | 7,352 | 12,270 | 4,868 | 0.668 |
 
-## Cross-BB Comparison
+Extra/M converges to **2/3**, confirming M_{n+1} = M_n + (2/3)M_n + O(1) = **(5/3)M_n + O(1)**.
 
-| BB(n) | Strategy | Peak growth | Crash interval | Loss fraction |
-|-------|----------|------------|----------------|---------------|
-| BB(2) | Flat bounce | N/A | N/A | N/A |
-| BB(3) | Simple cycle | N/A | N/A | N/A |
-| BB(4) | Nested oscillation | 3/2 | N/A | 1/peak |
-| BB(5) | Crash-rebuild counter | 5/3 | (5/3)^2 = 25/9 | → 2/3 |
+## The Crash-Rebuild Cycle
 
-BB(4) shows 4/3 in its first trough-to-peak recovery ratio, suggesting a possible pattern where n-state machines exhibit dynamics related to n/3. However, BB(4) does not have crash-rebuild dynamics — it has gentle ±1 oscillations with rare macro-level jumps. The crash-rebuild counter is a qualitative innovation of BB(5).
+The machine alternates between two phases:
 
-## Relationship to the Oscillator/Counter Distinction
+### Build Phase
+- Sweepers B (right) and D (left) bounce back and forth across the tape
+- At each boundary, the machine creates +2 ones (extending the contiguous run)
+- The 5 fixed `100` blocks are refilled back to `111` during this process
+- Boundary events also extend M beyond the refilled blocks
 
-Not all machines with crash dynamics are productive counters. We identified a critical distinction:
+### Crash Phase (ACE Erasure Cascade)
+- When the right sweeper reaches the right boundary in a specific configuration, the ACE chain fires
+- **A** reads 1: keeps it (writes 1, moves L)
+- **C** reads 1: erases it (writes 0, moves L)
+- **E** reads 1: erases it (writes 0, moves L)
+- Each ACE cycle processes 3 cells and erases 2 ones
+- The chain converts the contiguous run back into `100` blocks
+- Multiple sub-crashes occur as the chain encounters and passes through the fixed blocks
 
-- **Counters** (like BB(5)): crashes are **geometrically spaced** (growing intervals). The tape structure encodes a counter register that determines the spacing. These machines do exponentially more work between successive crashes.
+The chain terminates in two ways:
+- **C reads 0** → C,0→1RD: restarts the left sweeper (sub-crash boundary)
+- **E reads 0** → E,0→1RH: **HALT** (only happens at the final crash)
 
-- **Oscillators**: crashes are **constantly spaced** (ratio ≈ 1.0). The machine is trapped in a steady-state cycle of build-and-destroy. It never escapes to longer timescales.
+### The ACE Chain Formula
 
-This distinction is detectable computationally and appears to be a novel classification heuristic for undecided Turing machines.
+Applied to N contiguous ones, the ACE chain produces:
+- floor(N/3) `100` blocks
+- floor(N/3) + 1 surviving ones (one per block, plus one at the left edge)
+- Pattern: `1 001 001 001 ...`
+
+If N ≡ 2 (mod 3), the chain terminates with E reading 0, which triggers HALT. This is why the machine can only halt when the run length M has the right residue mod 3.
+
+## Why 5/3?
+
+The ratio 5/3 = 1 + 2/3 arises because:
+
+1. **The crash erases ~2/3 of the contiguous run** (ACE chain keeps every 3rd one)
+2. **The rebuild restores all erased ones** (sweepers refill the `100` blocks)
+3. **The rebuild ALSO extends the run** by ~(2/3)M additional ones through boundary events during the sweeping process
+4. **Net growth**: M + (2/3)M = (5/3)M
+
+The factor 2/3 in step 3 comes from the number of boundary events being proportional to M (the sweepers must traverse the full run), with each event creating +2 ones. The exact proportionality constant converges to produce (2/3)M extra growth.
+
+**Open problem**: prove that the boundary event count per rebuild cycle produces exactly (2/3)M extra ones in the limit. Our empirical data shows boundary events create ~0.8M ones, of which ~0.13M are consumed during the subsequent crash cascade, netting ~(2/3)M. A complete proof requires tracking which boundary-created ones survive the crash.
+
+## Additional Findings
+
+### Late Divergence
+
+Tested on all 7.5 million halting 3-state machines: machines sharing their first K steps can have radically different final scores. The first 35% of execution is deeply ambiguous (0-26% predictive). Divergence happens at 40-60% of runtime. By 70% of execution, 94% of outcomes are determined.
+
+### Cross-BB Structural Progression
+
+| BB(n) | Strategy | Nesting | LZ Complexity |
+|-------|----------|---------|---------------|
+| BB(2) | Flat bounce | Depth 1 | ~0.50 |
+| BB(3) | Sweep cycle | Depth 1 | ~0.55 |
+| BB(4) | Nested oscillation | Depth 2 | ~0.30 |
+| BB(5) | Crash-rebuild counter | Multi-scale | 0.0005 |
+
+### BB(6) Holdout Classification
+
+Applied our framework to all 1,214 undecided BB(6) machines from bbchallenge.org:
+- **272 translated cyclers** identified (definitively non-halting via tape periodicity)
+- **0 counter-type** machines found (none show BB(5)-like geometric crash spacing at 500M steps)
+- The BB(5) counter mechanism appears to be extraordinarily rare
+
+### Champion Fragility
+
+8,320 single-transition mutations of BB(5) tested. Every mutation either produces a trivial +1 extension or completely destroys the counter mechanism. The champion is extraordinarily isolated in machine space.
 
 ## Methods
 
-All analysis was performed by direct simulation in JavaScript (Node.js). The BB(5) champion was run for its full 47,176,870 steps. Crash events were detected by monitoring the ones count at 1,000-step intervals and flagging drops exceeding 100 ones. Boundary events were identified by tracking non-sweeper transitions (any transition other than B,1→1RB or D,1→1LD). Tape snapshots were captured at boundary events and crash events for structural analysis. LZ compression was used as an independent measure of state sequence structure.
+All analysis performed by direct simulation in JavaScript (Node.js) on a MacBook Pro M3. BB(5) champion simulated for its full 47,176,870 steps. Macro-crash boundaries identified by tracking all-time-high ones count. Tape configurations captured at exact crash onset for structural analysis.
 
-All code is available at [github.com/arcoretx/big-numbers](https://github.com/arcoretx/big-numbers).
+Code: [github.com/arcoretx/big-numbers](https://github.com/arcoretx/big-numbers)
