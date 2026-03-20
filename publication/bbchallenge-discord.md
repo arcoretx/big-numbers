@@ -35,6 +35,6 @@ Note: I'm not sure if these holdout machines have already been classified by mor
 
 Full write-up and code: https://github.com/arcoretx/big-numbers
 
-I'm aware of the Collatz-like function f(n) = 3n + 6 - 4⌊n/3⌋ on the wiki page for the 5-state champion, and that the 5/3 ratio is implicit in f(3x) = 5x + 6. What I haven't seen documented is the phenomenological side: the invariant tape pattern, the crash dynamics as a sawtooth with explicit constants, or the connection between the Collatz coefficients and the empirical growth/survival/interval ratios. Has anyone written this up before? Happy to be pointed to prior work.
+I'm aware of the Collatz-like function on the wiki page and Pascal Michel's configuration analysis C(3k) → C(5k+6), and that the 5/3 ratio is implicit in these. What I haven't seen documented is the phenomenological side: the invariant tape pattern (5 fixed `100` blocks at every peak), the crash dynamics as a sawtooth with explicitly converging constants (5/3, 1/3, 25/9), or the connection between the Collatz coefficients and these empirical dynamics. Also: the bbchallenge space-time diagram presumably shows the sawtooth visually, but has anyone written up the quantitative analysis? Happy to be pointed to prior work.
 
 ---
