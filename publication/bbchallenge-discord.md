@@ -28,8 +28,10 @@ Verified to 4 decimal places by cycle 13. The M values are: 2, 20, 50, 100, 182,
 **Open problem:** Prove that the boundary event count during rebuild produces exactly (2/3)M extra ones in the limit.
 
 **Other findings from the same analysis:**
-- 272 of the 1,214 BB(6) holdouts appear to be translated cyclers (tape becomes periodic). Happy to share the list if useful.
+- Applied snapshot-based cycle detection to all 1,214 BB(6) holdouts. Detected repeating (state, tape_window) configurations in **1,106 machines**: 312 simple loops (head_delta=0, bounded tape) and 794 translated cyclers (nonzero head_delta). However, ~370 of the "translated cyclers" have very small head deltas and need stronger verification. Happy to share the full list and discuss methodology.
 - The BB(5) champion is extraordinarily fragile — all 8,320 single-transition mutations either give a trivial +1 extension or completely destroy the counter dynamics.
+
+Note: I'm not sure if these holdout machines have already been classified by more sophisticated methods that I'm not aware of. Our cycle detection uses a 60-cell tape window snapshot at 100-step intervals, with double or triple verification. Please let me know if this approach has known failure modes in this context.
 
 Full write-up and code: https://github.com/arcoretx/big-numbers
 
