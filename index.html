@@ -75,7 +75,7 @@
         <!-- ══ BB(5) Crash Dynamics ══ -->
         <section id="crash">
             <h2>The 5/3 Ratio: How BB(5) Actually Works</h2>
-            <p>We discovered that the BB(5) champion doesn't build ones monotonically. It follows a <strong>crash-rebuild sawtooth pattern</strong> governed by a single ratio: <strong>5/3</strong>.</p>
+            <p>The BB(5) champion implements a <a href="https://wiki.bbchallenge.org/wiki/5-state_busy_beaver_winner">Collatz-like function</a> f(3x) = 5x + 6, which is known. But what does that look like in practice? It follows a <strong>crash-rebuild sawtooth pattern</strong> governed by a single ratio: <strong>5/3</strong>.</p>
 
             <div class="chart-container">
                 <canvas id="crash-chart" width="800" height="400"></canvas>
@@ -159,7 +159,13 @@
 
             <div class="finding">
                 <h3>BB(6) Holdout Analysis</h3>
-                <p>We applied our framework to all 1,214 undecided BB(6) machines from <a href="https://bbchallenge.org">bbchallenge.org</a>. Found 272 translated cyclers (definitively non-halting), and 0 machines with BB(5)-like counter dynamics among 500M-step runs. The counter mechanism appears to be extraordinarily rare.</p>
+                <p>We applied our framework to all 1,214 undecided BB(6) machines from <a href="https://bbchallenge.org">bbchallenge.org</a> at 500M steps each. Results: 306 translated cyclers (periodic tape &mdash; non-halting), 1 oscillator, 384 chaotic, 523 insufficient data, and <strong>0 machines with BB(5)-like counter dynamics</strong>. The crash-rebuild counter mechanism appears to be extraordinarily rare.</p>
+            </div>
+
+            <div class="finding">
+                <h3>Collatz Connection</h3>
+                <p>The BB(5) champion implements a <a href="https://wiki.bbchallenge.org/wiki/5-state_busy_beaver_winner">known Collatz-like function</a>: f(3x) = 5x + 6. The 5/3 growth ratio is implicit in this formula. Our contribution is connecting this abstract recurrence to the observable tape dynamics &mdash; the invariant structure, the crash pattern, and the explicit constants.</p>
+                <p>We attempted to extract Collatz-like functions from the BB(6) holdouts. While many machines have individual Collatz branches with coefficient 2 (consistent with our 6/3 = 2 prediction), the overall growth ratios are all below 2 &mdash; and most "ratio-2" detections turned out to be translated cycler artifacts. The real BB(6) champion likely uses far deeper mechanisms.</p>
             </div>
 
             <div class="finding">
@@ -183,8 +189,8 @@
             </div>
 
             <div class="finding">
-                <h3>5/3 is Novel</h3>
-                <p>A literature search confirms that no prior analysis of BB(5)'s runtime dynamics has been published. The crash pattern, the 5/3 ratio, the boundary event mechanism, and the <code>100100100</code> tape pattern are all new findings.</p>
+                <h3>What's New Here</h3>
+                <p>The Collatz-like function governing BB(5) is known (on the bbchallenge wiki), and the 5/3 ratio is mathematically implicit in it. What's new is the <strong>phenomenological analysis</strong>: the invariant tape structure (5 fixed <code>100</code> blocks at every peak), the crash-rebuild sawtooth as an observable phenomenon, the explicit connection between Collatz coefficients and empirical dynamics, the oscillator/counter distinction, late divergence quantification, and champion fragility.</p>
             </div>
         </section>
 

@@ -124,10 +124,19 @@ Tested on all 7.5 million halting 3-state machines: machines sharing their first
 
 ### BB(6) Holdout Classification
 
-Applied our framework to all 1,214 undecided BB(6) machines from bbchallenge.org:
-- **272 translated cyclers** identified (definitively non-halting via tape periodicity)
-- **0 counter-type** machines found (none show BB(5)-like geometric crash spacing at 500M steps)
+Applied our framework to all 1,214 undecided BB(6) machines from bbchallenge.org at 500M steps each:
+- **306 translated cyclers** identified (periodic tape — definitively non-halting)
+- **1 oscillator** (constant crash spacing — likely non-halting)
+- **384 chaotic** (irregular dynamics)
+- **523 insufficient data** (not enough crashes for classification)
+- **0 counter-type** machines found (none show BB(5)-like geometric crash spacing)
 - The BB(5) counter mechanism appears to be extraordinarily rare
+
+### Collatz Function Extraction
+
+We attempted to extract Collatz-like functions from the holdouts using RLE tape compression and landmark recurrence detection (adapted from Sligocki's methodology). Found ratio clusters at 4/3 (105 machines), 5/3 (60), and 2.0 (50). The 2.0 cluster initially appeared to confirm our n/3 = 6/3 = 2 prediction. However, investigation revealed all ratio-2 candidates are translated cyclers — the apparent ratio was an artifact of periodic `101010...` tape structure, not genuine Collatz dynamics.
+
+**Key lesson:** A single Collatz branch coefficient doesn't determine the overall growth ratio — the overall ratio depends on the stationary distribution over residues. In BB(5), f(3x) = 5x+6 dominates because x ≡ 0 (mod 3) is the most frequent residue class.
 
 ### Champion Fragility
 

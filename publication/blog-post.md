@@ -69,7 +69,8 @@ The machine has 5 states. Two of them (B and D) are **sweepers** — they march 
 
 - **Late divergence**: Among 7.5M halting 3-state machines, the first 35% of execution is deeply ambiguous — machines with identical early steps can have any final score.
 - **Champion fragility**: Every single-transition mutation of BB(5) either trivially extends it or completely destroys its dynamics.
-- **BB(6) holdouts**: We classified 272 of the 1,214 undecided BB(6) machines as translated cyclers (definitively non-halting).
+- **BB(6) holdouts**: We ran all 1,214 undecided BB(6) machines at 500M steps. Found 306 translated cyclers (non-halting) and zero machines with BB(5)-like counter dynamics. Attempted Collatz function extraction — found ratio clusters at 4/3, 5/3, and 2.0, but the ratio-2 candidates all turned out to be translated cycler artifacts.
+- **Collatz connection**: The 5/3 ratio comes directly from the known Collatz function f(3x) = 5x + 6. We bridge the gap between this abstract formula and the concrete tape dynamics.
 
 ## Code
 
